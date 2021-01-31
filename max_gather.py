@@ -1,34 +1,71 @@
 def get_max_apples(A: list, K: int, L: int):
+    """
+    Calcula o número máximo de itens que podem ser coletadas por dois coletores em um intervalo
+    :param A: lista de inteiros positivos
+    :param K: inteiro positivo
+    :param L: inteiro positivo
+    """
+    # Trata parâmetros recebidos
+    try:
+        K = int(K)
+        L = int(L)
+        if type(A) == str:
+            A = list(A.strip("[]{}()").split(","))
+
+        for i in range(0, len(A)):
+            A[i] = int(A[i])
+    except:
+        raise ValueError('Valores informados não permitem calcular a coleta')
+        print("Parâmetros inválidos")
+        return -1, 0, 0
+
     if K < 0 or L < 0 or ((K + L) > len(A)):
-        return -1
-    bigger = K if K > L else L
-    smaller = L if K > L else K
+        resp = -1, 0, 0
+        return resp
 
-    first = max_interval(A, bigger, smaller)    # tupla com soma das maçãs e índice inicial de coleta
-    remain_left = A[:first[1]]                  # lista com as árvores à esquerda do limite do primeiro coletor
-    remain_right = A[(first[1]+bigger):]        # lista com as árvores à direita
+    def calculate_max(first, second):
+        # tupla com soma das maçãs e índice inicial de coleta
+        first_gatherer = max_interval(A, first, second)
 
-    second_left = max_interval(remain_left, smaller, 0)
-    second_right = max_interval(remain_right, smaller, 0)
-    second = [0, 0]
-    if second_left[0] > second_right[0]:
-        second = list(second_left)
+        # lista com as árvores à esquerda do limite do primeiro coletor
+        remain_left = A[:first_gatherer[1]]
+
+        # lista com as árvores à direita
+        remain_right = A[(first_gatherer[1] + first):]
+
+        gather_left = max_interval(remain_left, second, 0)
+        gather_right = max_interval(remain_right, second, 0)
+        second_gatherer = [0, 0]
+        if gather_left[0] > gather_right[0]:
+            second_gatherer = list(gather_left)
+        else:
+            second_gatherer = list(gather_right)
+            # indice inicial do segundo intervalo + indice inicial do primeiro + comprimento do primeiro
+            second_gatherer[1] = second_gatherer[1] + first_gatherer[1] + first
+
+        max_apples = first_gatherer[0] + second_gatherer[0]
+        result = max_apples, first_gatherer[1], second_gatherer[1]
+        return result
+
+    starting_left = calculate_max(K, L)
+    starting_right = calculate_max(L, K)
+    resp = []
+    if starting_left[0] >= starting_right[0]:
+        resp = starting_left
     else:
-        second = list(second_right)
-        # indice inicial do segundo intervalo + indice inicial do primeiro + comprimento do primeiro
-        second[1] = second[1] + first[1] + bigger
+        resp = starting_right[0], starting_right[2], starting_right[1]
 
-    max_apples = first[0]+second[0]
-    k_index = first[1] if K > L else second[1]
-    l_index = second[1] if K > L else first[1]
-
-    return max_apples, k_index, l_index
+    return resp
 
 
 def max_interval(arr, qty, remain_qty):
-    start_index = 0
-    max_sum = 0
-    curr_sum = 0
+    """
+    Calcula o número máximo de itens num dado intervalo, considerando árvores restantes para o próximo coletor
+    :param arr: lista de inteiros
+    :param qty: inteiro positivo
+    :param remain_qty: inteiro positivo
+    """
+    start_index, max_sum, curr_sum = 0, 0, 0
 
     for i in range(0, len(arr)):
         if (i + qty) > len(arr):
@@ -41,7 +78,7 @@ def max_interval(arr, qty, remain_qty):
         curr_sum = 0
         for j in range(i, qty+i):
             curr_sum += arr[j]
-        if curr_sum > max_sum and True:
+        if curr_sum > max_sum:
             max_sum = curr_sum
             start_index = i
 

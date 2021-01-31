@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'GET':
-        return jsonify(data=(get_max_apples([3, 1, 10, 30, 1, 1], 2, 3))), 200
+    if request.method == 'POST':
+        return jsonify(data=(get_max_apples(request.form['A'], request.form['K'], request.form['L']))), 200
     else:
-        return render_template('index.html')
+        return render_template('index.html'), 200
 
 
 if __name__ == '__main__':
