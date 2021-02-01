@@ -13,10 +13,9 @@ def get_max_apples(A: list, K: int, L: int):
             A = list(A.strip("[]{}()").split(","))
 
         for i in range(0, len(A)):
-            A[i] = int(A[i])
+            A[i] = int(float(A[i]))
     except:
         raise ValueError('Valores informados não permitem calcular a coleta')
-        print("Parâmetros inválidos")
         return -1, 0, 0
 
     if K < 0 or L < 0 or ((K + L) > len(A)):

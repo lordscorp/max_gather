@@ -1,8 +1,13 @@
 from flask import Flask, jsonify, request, render_template
 
+from flask_cors import CORS
+
 from max_gather import get_max_apples
 
 app = Flask(__name__)
+
+# ativar CORS (somente para facilitar os testes em ambientes de desenvolvimento)
+CORS(app, resources={r'/*': {'origins': '*'}})
 
 
 @app.route('/', methods=['GET', 'POST'])
