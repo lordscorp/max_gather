@@ -15,7 +15,6 @@ Retorna objeto `json` com:
 
 Caso não seja informado um intervalo válido para coleta, retorna "-1" como primeiro valor do objeto "data" (número máximo de maçãs).
 
-
 * **URL**
 
   /
