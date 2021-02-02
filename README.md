@@ -15,6 +15,23 @@ Retorna objeto `json` com:
 
 Caso não seja informado um intervalo válido para coleta, retorna "-1" como primeiro valor do objeto "data" (número máximo de maçãs).
 
+##Configuração do servidor
+
+É necessário ter o `pipenv` instalado para instalar a aplicação.
+
+### Instalar dependências
+```
+pipenv install
+```
+### Iniciar aplicação
+```
+flask run --host=0.0.0.0 --port=8080
+```
+
+---
+
+##Especificações
+
 * **URL**
 
   /
