@@ -12,6 +12,14 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """Endpoint principal.
+    ---
+    post:
+        parameters:
+        - A: array
+        - K: int
+        - L: int
+    """
     if request.method == 'POST':
         return jsonify(data=(get_max_apples(request.form['A'], request.form['K'], request.form['L']))), 200
     else:
