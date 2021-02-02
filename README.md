@@ -1,4 +1,4 @@
-**Otimizador de Coleta**
+**Otimizador de Coleta - API**
 ----
 Calcula o número máximo de maçãs que podem ser coletadas em determinados intervalos de um array de inteiros.
 
