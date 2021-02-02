@@ -1,10 +1,13 @@
-def get_max_apples(A: list, K: int, L: int):
+def get_max_apples(A, K, L):
     """
     Calcula o número máximo de itens que podem ser coletadas por dois coletores em um intervalo
+
     :param A: lista de inteiros positivos
     :param K: inteiro positivo
     :param L: inteiro positivo
     """
+    resp = -1, 0, 0
+
     # Trata parâmetros recebidos
     try:
         K = int(K)
@@ -16,69 +19,46 @@ def get_max_apples(A: list, K: int, L: int):
             A[i] = int(float(A[i]))
     except:
         raise ValueError('Valores informados não permitem calcular a coleta')
-        return -1, 0, 0
+        # return -1, 0, 0
 
     if K < 0 or L < 0 or ((K + L) > len(A)):
-        resp = -1, 0, 0
         return resp
 
-    def calculate_max(first, second):
-        # tupla com soma das maçãs e índice inicial de coleta
-        first_gatherer = max_interval(A, first, second)
+    def iterate_sum():
+        max_sum, k_index, l_index = 0, 0, 0
+        last_valid_i = len(A) - K - L + 1
+        last_valid_j = len(A) - L + 1
 
-        # lista com as árvores à esquerda do limite do primeiro coletor
-        remain_left = A[:first_gatherer[1]]
+        # Percorre array verificando continuamente se soma total é a máxima possível
+        for i in range(0, last_valid_i):
+            k_sum = 0
 
-        # lista com as árvores à direita
-        remain_right = A[(first_gatherer[1] + first):]
+            # Soma valores do intervalo K iniciado em i
+            for ik in range(i, i + K):
+                k_sum += A[ik]
 
-        gather_left = max_interval(remain_left, second, 0)
-        gather_right = max_interval(remain_right, second, 0)
-        second_gatherer = [0, 0]
-        if gather_left[0] > gather_right[0]:
-            second_gatherer = list(gather_left)
-        else:
-            second_gatherer = list(gather_right)
-            # indice inicial do segundo intervalo + indice inicial do primeiro + comprimento do primeiro
-            second_gatherer[1] = second_gatherer[1] + first_gatherer[1] + first
+            # Para cada item a partir do fim do intervalo K, itera para obter a maior soma possível do intervalo L
+            for j in range(i + K, last_valid_j):
+                curr_sum, l_sum = 0, 0
 
-        max_apples = first_gatherer[0] + second_gatherer[0]
-        result = max_apples, first_gatherer[1], second_gatherer[1]
-        return result
+                # Soma valores do intervalo L iniciado em j
+                for jl in range(j, j + L):
+                    l_sum += A[jl]
 
-    starting_left = calculate_max(K, L)
-    starting_right = calculate_max(L, K)
-    resp = []
-    if starting_left[0] >= starting_right[0]:
-        resp = starting_left
-    else:
-        resp = starting_right[0], starting_right[2], starting_right[1]
+                curr_sum = k_sum + l_sum
+                if curr_sum > max_sum:
+                    max_sum = curr_sum
+                    k_index = i
+                    l_index = j
+
+        return max_sum, k_index, l_index
+
+    # Repete cálculo invertendo a ordem dos coletores (somente se tamanhos dos intervalos K e L forem diferentes)
+    resp = iterate_sum()
+    if K != L:
+        K, L = L, K
+        reverse_i = iterate_sum()
+        if reverse_i[0] > resp[0]:
+            resp = reverse_i[0], reverse_i[2], reverse_i[1]
 
     return resp
-
-
-def max_interval(arr, qty, remain_qty):
-    """
-    Calcula o número máximo de itens num dado intervalo, considerando árvores restantes para o próximo coletor
-    :param arr: lista de inteiros
-    :param qty: inteiro positivo
-    :param remain_qty: inteiro positivo
-    """
-    start_index, max_sum, curr_sum = 0, 0, 0
-
-    for i in range(0, len(arr)):
-        if (i + qty) > len(arr):
-            break
-        # Se não houver itens à esquerda nem à direita suficientes para o restante, pula iteração
-        over_left = (i - remain_qty) < 0
-        over_right = (i + qty + remain_qty) > len(arr)
-        if over_left and over_right:
-            continue
-        curr_sum = 0
-        for j in range(i, qty+i):
-            curr_sum += arr[j]
-        if curr_sum > max_sum:
-            max_sum = curr_sum
-            start_index = i
-
-    return max_sum, start_index
