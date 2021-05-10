@@ -1,9 +1,9 @@
 **Otimizador de Coleta - API**
 ----
-Calcula o número máximo de maçãs que podem ser coletadas em determinados intervalos de um array de inteiros.
+Calcula o número máximo de frutas que podem ser coletadas em determinados intervalos de um array de inteiros.
 
 Retorna objeto `json` com:
- - Número máximo de maçãs coletadas
+ - Número máximo de frutas coletadas
  - Índice do array do início da primeira coleta
  - Índice do array do início da segunda coleta
 
@@ -13,7 +13,7 @@ Retorna objeto `json` com:
 }
 ```
 
-Caso não seja informado um intervalo válido para coleta, retorna "-1" como primeiro valor do objeto "data" (número máximo de maçãs).
+Caso não seja informado um intervalo válido para coleta, retorna "-1" como primeiro valor do objeto "data" (número máximo de frutas).
 
 ##Configuração do servidor
 
@@ -46,7 +46,7 @@ flask run --host=0.0.0.0 --port=8080
 
   `A=[array(integer, integer, ...)]`
   `K=[integer]`
-  `A=[integer]`
+  `L=[integer]`
 
 
 * **Success Response:**
